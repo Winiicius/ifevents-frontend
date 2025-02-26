@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import Home from "./pages/Home.jsx";
+import ListarUsuarios from "./pages/ListarUsuarios.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import CriarUsuario from "./pages/CriarUsuario.jsx";
 import Header from "./components/Header.jsx";
@@ -9,7 +9,7 @@ import Header from "./components/Header.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <ListarUsuarios />,
   },
   {
     path: "/usuarios",

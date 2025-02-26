@@ -2,18 +2,18 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Th from "../components/Th";
 import Td from "../components/Td";
-import api from "../Api";
+import api from "../api";
 
-function Home() {
+function ListarUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
   const navigate = useNavigate();
 
-  const editarUsuario = () => {
-    navigate("/usuario/:id/editar");
+  const editarUsuario = (usuarioSelecionado) => {
+    navigate("/usuarios", { state: { usuario: usuarioSelecionado } });
   };
 
-  const deletarUsuario = (id) => {
-    api
+  const deletarUsuario = async (id) => {
+    await api
       .delete(`/usuarios/${id}`)
       .then(() => {
         setUsuarios(usuarios.filter((user) => user.id !== id));
@@ -46,8 +46,8 @@ function Home() {
             Usuários Cadastrados
           </h1>
           <button
-            onClick={criarUsuario}
-            className="absolute left-130 px-6 py-2 bg-green-500  text-white rounded-lg font-bold hover:bg-blue-600 cursor-pointer"
+            onClick={() => criarUsuario()}
+            className="absolute right-0 px-6 py-2 bg-green-500 mr-2 text-white rounded-lg font-bold hover:bg-blue-600 cursor-pointer"
           >
             Criar usuário
           </button>
@@ -78,7 +78,7 @@ function Home() {
                     <Td atributo={usuario.tipo} />
                     <td className="px-4 py-2 border border-black ">
                       <button
-                        onClick={() => editarUsuario()}
+                        onClick={() => editarUsuario(usuario)}
                         className="bg-green-500 w-full h-full my-2 text-white rounded-md cursor-pointer"
                       >
                         Editar
@@ -105,4 +105,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default ListarUsuarios;
