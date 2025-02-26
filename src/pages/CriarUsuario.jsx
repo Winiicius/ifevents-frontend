@@ -1,19 +1,29 @@
 import { useForm } from "react-hook-form";
-import api from "../Api";
-import { useNavigate } from "react-router-dom";
+import api from "../api";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function CriarUsuario() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const usuarioParaEditar = location.state?.usuario;
 
-  const criarUsuario = async (data) => {
+  const criarOuEditarUsuario = async (data) => {
     try {
-      const response = await api.post("http://localhost:8080/usuarios", data);
-      console.log("Resposta do servidor:", response.data);
-      alert("Usuário cadastrado com sucesso!");
+      console.log(usuarioParaEditar);
+      if (usuarioParaEditar) {
+        // Se há um usuário para editar, fazemos uma requisição PUT
+        await api.put(`http://localhost:8080/usuarios/${usuarioParaEditar.id}`, data);
+        alert("Usuário atualizado com sucesso!");
+      } else {
+        // Caso contrário, fazemos uma requisição POST para criar um novo usuário
+        await api.post("http://localhost:8080/usuarios", data);
+        alert("Usuário cadastrado com sucesso!");
+      }
       navigate("/");
     } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
-      alert("Erro ao cadastrar usuário.");
+      console.error("Erro ao processar usuário:", error);
+      alert("Erro ao processar usuário.");
     }
   };
 
@@ -21,14 +31,26 @@ function CriarUsuario() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    reset,
+  } = useForm({
+    defaultValues: usuarioParaEditar || {},
+  });
+
+  // Resetar o formulário com os dados do usuário para editar, se houver
+  useEffect(() => {
+    if (usuarioParaEditar) {
+      reset(usuarioParaEditar);
+    }
+  }, [usuarioParaEditar, reset]);
 
   return (
     <div className="h-screen w-screen bg-gray-300">
       <div className=" relative flex justify-center items-center w-full md:w-3/4 lg:w-3/4 mx-auto shadow-md">
-        <h1 className="font-bold text-4xl text-center p-6">Novo usuário</h1>
+        <h1 className="font-bold text-4xl text-center p-6">
+          {usuarioParaEditar ? "Editar Usuário" : "Novo Usuário"}
+        </h1>
         <form
-          onSubmit={handleSubmit(criarUsuario)}
+          onSubmit={handleSubmit(criarOuEditarUsuario)}
           className="max-w-md mx-auto p-4 border rounded-lg shadow-md"
         >
           {/* Nome */}
@@ -38,8 +60,8 @@ function CriarUsuario() {
               {...register("nome", { required: "Nome é obrigatório" })}
               className="w-full p-2 border rounded"
             />
-            {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name.message}</p>
+            {errors.nome && (
+              <p className="text-red-500 text-sm">{errors.nome.message}</p>
             )}
           </div>
 
@@ -57,24 +79,6 @@ function CriarUsuario() {
               <p className="text-red-500 text-sm">{errors.email.message}</p>
             )}
           </div>
-
-          {/* <div className="mb-4">
-            <label className="block text-sm font-medium">Senha:</label>
-            <input
-              type="password"
-              {...register("password", {
-                required: "Senha é obrigatória",
-                minLength: {
-                  value: 6,
-                  message: "A senha deve ter pelo menos 6 caracteres",
-                },
-              })}
-              className="w-full p-2 border rounded"
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
-            )}
-          </div> */}
 
           {/* Tipo de Usuário */}
           <div className="mb-4">
@@ -135,11 +139,12 @@ function CriarUsuario() {
             type="submit"
             className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
           >
-            Cadastrar
+            {usuarioParaEditar ? "Atualizar" : "Cadastrar"}
           </button>
         </form>
       </div>
     </div>
   );
 }
+
 export default CriarUsuario;
