@@ -2,7 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import api from "../../api";
 import HelpTooltip from "./components/HelpToolTip";
-import FormInput from "./components/FormInput";
+import FormInput from "../../components/FormInput";
 import OrganizadoresInput from "./components/OrganizadoresInput";
 
 function CriarEvento() {

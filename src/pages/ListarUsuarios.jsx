@@ -22,7 +22,7 @@ function ListarUsuarios() {
   };
 
   const criarUsuario = () => {
-    navigate("/usuarios");
+    navigate("/criar-usuario");
   };
 
   useEffect(() => {
