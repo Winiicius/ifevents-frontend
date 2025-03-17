@@ -1,8 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import FormInput from "../../components/FormInput";
 import { useForm } from "react-hook-form";
+import api from "../../api";
+import { useAuth } from "../../context/AuthContext";
 
 function Login() {
+
+    const { login } = useAuth()
+
     const navigate = useNavigate();
 
     const {
@@ -16,9 +21,17 @@ function Login() {
             login: data.login,
             senha: data.senha
         };
+
         try {
-            // login
-            // navigate() // Ir para home (quando existir)
+
+            console.log(user);
+            const response = await api.post("http://localhost:8080/auth/login", user)
+
+            console.log(response.data);
+
+            // login(response.data) // token
+
+            navigate("/eventos")
         } catch (error) {
             alert(error.response?.data || error.message);
         }
