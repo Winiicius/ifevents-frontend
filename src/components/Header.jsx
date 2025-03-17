@@ -12,6 +12,8 @@ function Header() {
         return <HeaderLogin title="Realizar Login" />
       case '/cadastro':
         return <HeaderLogin title="Realizar Cadastro" />
+      case '/acesso-negado':
+        return <HeaderLogin title="Acesso Negado" />
       case '/recuperar-senha':
         return <HeaderLogin title="Recuperar Senha" />
       default:
