@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "../../api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export const Evento = () => {
   const [eventos, setEventos] = useState([]);
@@ -12,6 +13,7 @@ export const Evento = () => {
   const [doingInscricao, setDoingInscricao] = useState(false);
 
   const [visiblePopUp, setVisiblePopUp] = useState(false);
+  const { userRoles } = useAuth();
 
   const nav = useNavigate();
 
@@ -32,7 +34,19 @@ export const Evento = () => {
   }, [paginaAtual, size]);
 
   async function getEventos(pagina, tamanho) {
-    const response = await api.get(`/eventos?page=${pagina}&size=${tamanho}`);
+    let token = localStorage.getItem("token");
+    let status = userRoles.authority === "COORDENADOR" ? "" : "APROVADO";
+    console.log(userRoles);
+
+    const response = await api.get(
+      `/eventos?page=${pagina}&size=${tamanho}&status=${status}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const dados = response.data;
 
     setEventos(dados.content);
@@ -168,6 +182,12 @@ export const Evento = () => {
           </div>
         </div>
       )}
+      <button
+        onClick={() => nav("/criar-evento")}
+        className="bg-green-500 cursor-pointer rounded-md hover:bg-green-600 transition text-white p-2"
+      >
+        Criar evento
+      </button>
     </div>
   );
 };

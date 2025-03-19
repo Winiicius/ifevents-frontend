@@ -13,11 +13,25 @@ function CriarUsuario() {
       console.log(usuarioParaEditar);
       if (usuarioParaEditar) {
         // Se há um usuário para editar, fazemos uma requisição PUT
-        await api.put(`http://localhost:8080/usuarios/${usuarioParaEditar.id}`, data);
+        await api.put(
+          `http://localhost:8080/usuarios/${usuarioParaEditar.id}`,
+          data
+        );
         alert("Usuário atualizado com sucesso!");
       } else {
+        let token = localStorage.getItem("token");
+        console.log(token);
+
         // Caso contrário, fazemos uma requisição POST para criar um novo usuário
-        await api.post("http://localhost:8080/usuarios", data);
+        console.log(data);
+        const resposta = await api.post("/usuarios", data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        let r = await resposta.data;
+        console.log("response : " + r);
         alert("Usuário cadastrado com sucesso!");
       }
       navigate("/");
@@ -77,6 +91,21 @@ function CriarUsuario() {
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
+          </div>
+
+          {/* Senha */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Senha:</label>
+            <input
+              {...register("senha", {
+                required: "Senha é obrigatória",
+                pattern: { message: "Senha inválida" },
+              })}
+              className="w-full p-2 border rounded"
+            />
+            {errors.senha && (
+              <p className="text-red-500 text-sm">{errors.senha.message}</p>
             )}
           </div>
 
