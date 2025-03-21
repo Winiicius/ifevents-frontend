@@ -19,19 +19,10 @@ function CriarUsuario() {
         );
         alert("Usuário atualizado com sucesso!");
       } else {
-        let token = localStorage.getItem("token");
-        console.log(token);
-
         // Caso contrário, fazemos uma requisição POST para criar um novo usuário
         console.log(data);
-        const resposta = await api.post("/usuarios", data, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        let r = await resposta.data;
-        console.log("response : " + r);
+        await api.post("/auth/register", data)
+
         alert("Usuário cadastrado com sucesso!");
       }
       navigate("/");
