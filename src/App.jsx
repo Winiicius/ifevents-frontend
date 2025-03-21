@@ -13,42 +13,37 @@ import PaginaNaoEncontrada from "./pages/PaginaNaoEncontrada";
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="login" element={<Login />} />
-            {/* <Route path="cadastro" element={<Cadastro />} /> */}
-            {/* <Route path="recuperar-senha" element={<RecuperarSenha />} /> */}
-            <Route path="acesso-negado" element={<AcessoNegado />} />
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Layout />}>
+                        <Route path="login" element={<Login />} />
+                        {/* <Route path="cadastro" element={<Cadastro />} /> */}
+                        {/* <Route path="recuperar-senha" element={<RecuperarSenha />} /> */}
+                        <Route path="acesso-negado" element={<AcessoNegado />} />
+                        <Route path="criar-usuario" element={<CriarUsuario />} />
 
-            <Route path="eventos" element={<Evento />} />
-            <Route element={<ProtectedLayout roles={["COORDENADOR"]} />}>
-              <Route path="usuarios" element={<ListarUsuarios />} />
-            </Route>
-            <Route
-              element={
-                <ProtectedLayout
-                  roles={["COORDENADOR", "PROFESSOR", "ALUNO"]}
-                />
-              }
-            ></Route>
-            <Route path="criar-evento" element={<CriarEvento />} />
-            <Route path="criar-usuario" element={<CriarUsuario />} />
-            <Route
-              path="*"
-              element={<Navigate to="/pagina-nao-encontrada" replace />}
-            />
-            <Route
-              path="pagina-nao-encontrada"
-              element={<PaginaNaoEncontrada />}
-            />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  );
+                        <Route path="eventos" element={<Evento />} />
+                        <Route element={<ProtectedLayout roles={["COORDENADOR"]} />}>
+                            <Route path="usuarios" element={<ListarUsuarios />} />
+                        </Route>
+                        <Route element={<ProtectedLayout roles={["COORDENADOR", "PROFESSOR", "ALUNO"]} />}>
+                            <Route path="criar-evento" element={<CriarEvento />} />
+                        </Route>
+                        <Route
+                            path="*"
+                            element={<Navigate to="/pagina-nao-encontrada" replace />}
+                        />
+                        <Route
+                            path="pagina-nao-encontrada"
+                            element={<PaginaNaoEncontrada />}
+                        />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
+    );
 }
 
 export default App;

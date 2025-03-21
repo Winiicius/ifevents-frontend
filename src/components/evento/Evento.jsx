@@ -35,8 +35,7 @@ export const Evento = () => {
 
   async function getEventos(pagina, tamanho) {
     let token = localStorage.getItem("token");
-    let status = userRoles.authority === "COORDENADOR" ? "" : "APROVADO";
-    console.log(userRoles);
+    let status = userRoles === "COORDENADOR" ? "" : "APROVADO";
 
     const response = await api.get(
       `/eventos?page=${pagina}&size=${tamanho}&status=${status}`,
@@ -69,7 +68,6 @@ export const Evento = () => {
         email: "rharhuky@gmail.com",
       });
       const data = await response.data;
-      console.log(data);
       setDoingInscricao(false);
       closeModal();
       await delay();
